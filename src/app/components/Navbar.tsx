@@ -2,6 +2,7 @@ import React from "react";
 import { MdSunny } from "react-icons/md";
 import { TiLocationArrow } from "react-icons/ti";
 import { ImLocation2 } from "react-icons/im";
+import SearchBar from "./SearchBar";
 
 type Props = {};
 
@@ -14,9 +15,13 @@ const Navbar = (props: Props) => {
           <MdSunny className="text-3xl text-yellow-300 " />
         </p>
         <section className="flex gap-1 items-center ">
-        <TiLocationArrow  className="text-4xl text-pink-300" />
+        <TiLocationArrow  className="text-4xl hover:cursor-pointer text-pink-300" />
 
         <ImLocation2 className="text-2xl text-pink-300" />
+        <p className="text-2xl text-gray-500" >India</p>
+        <SearchBar/>
+
+
         </section>
       </div>
     </nav>
