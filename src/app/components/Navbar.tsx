@@ -15,9 +15,9 @@ const Navbar = (props: Props) => {
           <MdSunny className="text-3xl text-yellow-300 " />
         </p>
         <section className="flex gap-1 items-center ">
-        <TiLocationArrow  className="text-4xl hover:cursor-pointer text-pink-300" />
+        <TiLocationArrow  title="Your Current Location" className="text-4xl hover:cursor-pointer text-pink-300" />
 
-        <ImLocation2 className="text-2xl text-pink-300" />
+        <ImLocation2    className="text-2xl text-pink-300"  />
         <p className="text-2xl text-gray-500" >India</p>
         <SearchBar/>
 
