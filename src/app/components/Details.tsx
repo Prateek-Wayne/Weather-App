@@ -6,16 +6,6 @@ import { FaTachometerAlt } from "react-icons/fa";
 import { TbSunrise } from "react-icons/tb";
 import { TbSunset } from "react-icons/tb";
 
-
-export interface WeatherDetailProps {
-  visability: string;
-  humidity: string;
-  windSpeed: string;
-  airPressure: string;
-  sunrise: string;
-  sunset: string;
-}
-
 export interface SingleWeatherDetailProps {
   name: string;
   icon?: React.ReactNode;
@@ -23,17 +13,16 @@ export interface SingleWeatherDetailProps {
 }
 
 
-type Details = {
+export interface TypeDetailsProp {
     visibility:string;
     humidity:string;
     windSpeed:string;
     airPressure:string;
     sunrise:string;
     sunset:string;
-
 }
 
-const Details = (props: Details) => {
+const Details = (props: TypeDetailsProp) => {
   return (
     <>
     <SingleWeatherDetail name="Visibility" icon={<IoIosEye/>} value={props.visibility}/>

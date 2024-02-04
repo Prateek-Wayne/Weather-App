@@ -21,11 +21,11 @@ interface WeatherDetail {
       all: number;
     };
     wind: {
-      speed: string;
+      speed: number;
       deg: number;
       gust: number;
     };
-    visibility: string;
+    visibility: number;
     pop: number;
     sys: {
       pod: string;

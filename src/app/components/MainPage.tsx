@@ -6,8 +6,9 @@ import { format, fromUnixTime, parseISO } from "date-fns";
 import Container from "./Container";
 import { kelvinTodegree } from "../utils/kelvinToDegree";
 import WeatherIcon from "./WeatherIcon";
-import { getDayOrNightIcon } from "../utils/getDayOrNightIcon";
 import Details from "./Details";
+import ForeCastWeather from "./ForeCastWeather";
+import { convertWindSpeed, metersToKilometers,getDayOrNightIcon ,} from "../utils/weatherUtils";
 
 type Props = {};
 
@@ -21,7 +22,25 @@ const MainPage = (props: Props) => {
       return data;
     },
   });
+
   console.log(data);
+
+  const uniqueDates = [
+    ...new Set(
+      data?.list.map(
+        (entry) => new Date(Number(entry.dt) * 1000).toISOString().split("T")[0]
+      )
+    ),
+  ];
+
+  // Filtering data to get the first entry after 6 AM for each unique date
+  const firstDataForEachDate = uniqueDates.map((date) => {
+    return data?.list.find((entry) => {
+      const entryDate = new Date(Number(entry.dt) * 1000).toISOString().split("T")[0];
+      const entryTime = new Date(Number(entry.dt) * 1000).getHours();
+      return entryDate === date && entryTime >= 6;
+    });
+  });
   const firstData = data?.list[0];
   if (isPending) {
     return (
@@ -41,7 +60,7 @@ const MainPage = (props: Props) => {
               {format(parseISO(firstData?.dt_txt ?? ""), "dd.MM.yyyy")}
             </p>
           </h2>
-          <Container>
+          <Container className="bg-yellow-50">
             {/* temperature */}
             <div className="flex flex-col px-4 gap-1">
               <p className="text-6xl text-gray-500">
@@ -89,7 +108,7 @@ const MainPage = (props: Props) => {
           {/* extra */}
           <div className="flex py-5">
             {/* left  */}
-            <Container className="w-fit flex-col justify-center mr-4 items-center px-4">
+            <Container className="w-fit flex-col justify-center mr-4 items-center px-4 bg-pink-200">
               <p className=" capitalize text-center font-semibold mt-3">
                 {firstData?.weather[0].description}{" "}
               </p>
@@ -103,8 +122,8 @@ const MainPage = (props: Props) => {
             {/* Right  */}
             <Container className="bg-yellow-300 shadow-sm justify-between gap-2 px-4 flex">
               <Details
-                visibility={firstData?.visibility ?? "0"}
-                windSpeed={firstData?.wind.speed ?? "0"}
+                visibility={`${metersToKilometers(firstData?.visibility ?? 10000)} `}
+                windSpeed={`${convertWindSpeed(firstData?.wind.speed ?? 1.64)} `}
                 humidity={firstData?.main?.humidity ?? "0"}
                 airPressure={firstData?.main.pressure ?? "0"}
                 sunrise={format(
@@ -121,7 +140,36 @@ const MainPage = (props: Props) => {
         </div>
       </section>
       {/* seven days forcast   */}
-      <section></section>
+      <section className=" flex flex-col gap-3 ">
+        <p className="text-2xl font-medium">Forcast (7 Days) </p>
+
+        {/* // iterating over data... */}
+        {firstDataForEachDate.map((d, i) => (
+                <ForeCastWeather
+                  key={i}
+                  description={d?.weather[0].description ?? ""}
+                  weatherIcon={d?.weather[0].icon ?? "01d"}
+                  date={format(parseISO(d?.dt_txt ?? ""), "dd.MM")}
+                  day={format(parseISO(d?.dt_txt ?? ""), "EEEE")}
+                  feels_like={d?.main.feels_like ?? 0}
+                  temp={d?.main.temp ?? 0}
+                  temp_max={d?.main.temp_max ?? 0}
+                  temp_min={d?.main.temp_min ?? 0}
+                  airPressure={`${d?.main.pressure} hPa `}
+                  humidity={`${d?.main.humidity}% `}
+                  sunrise={format(
+                    fromUnixTime(data?.city.sunrise ?? 1702517657),
+                    "H:mm"
+                  )}
+                  sunset={format(
+                    fromUnixTime(data?.city.sunset ?? 1702517657),
+                    "H:mm"
+                  )}
+                  visibility={`${metersToKilometers(d?.visibility ?? 10000)} `}
+                  windSpeed={`${convertWindSpeed(d?.wind.speed ?? 1.64)} `}
+                />
+              ))}
+      </section>
     </div>
   );
 };
