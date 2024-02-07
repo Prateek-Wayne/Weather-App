@@ -4,6 +4,8 @@ import { TiLocationArrow } from "react-icons/ti";
 import { ImLocation2 } from "react-icons/im";
 import SearchBar from "./SearchBar";
 import axios from "axios";
+import { useAtom } from "jotai";
+import { placeAtom } from "../atom";
 
 type Props = {};
 
@@ -14,6 +16,8 @@ const Navbar = (props: Props) => {
   const [suggestion, setSuggestion] = useState<string[]>([]);
   const [showSuggestion,setShowSuggestion]=useState<boolean>(false);
 
+  const[place,setPlace]=useAtom(placeAtom);
+  
   const handleChange = async (e: string) => {
     setCity(e);
     let cityArray: string[] = [];
@@ -43,7 +47,8 @@ const Navbar = (props: Props) => {
   };
   const handleSubmit: React.FormEventHandler<HTMLFormElement> = (e) => {
     e.preventDefault();
-    console.log("Submit clicked");
+    setPlace(city);
+    console.log("Submit clicked",place);
   };
 
   const handleSuggestionBoxClick=(list:string)=>{
