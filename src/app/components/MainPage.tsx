@@ -79,17 +79,17 @@ const MainPage = (props: Props) => {
             {/* temperature */}
             <div className="flex flex-col px-4 gap-1">
               <p className="text-6xl text-gray-500">
-                {kelvinTodegree(firstData?.main?.temp ?? 273)}°{" "}
+                {kelvinTodegree(firstData?.main?.temp ?? 0)}°{" "}
               </p>
               <span className="text-sm text-gray-400">
-                feels like {kelvinTodegree(firstData?.main?.feels_like ?? 273)}°
+                feels like {kelvinTodegree(firstData?.main?.feels_like ?? 0)}°
               </span>
               <p className="flex justify-star gap-1 text-gray-600 ">
                 <span>
-                  {kelvinTodegree(firstData?.main?.temp_min ?? 273)}°⬇️
+                  {kelvinTodegree(firstData?.main?.temp_min ?? 0)}°⬇️
                 </span>
                 <span>
-                  {kelvinTodegree(firstData?.main?.temp_max ?? 273)}⬆️
+                  {kelvinTodegree(firstData?.main?.temp_max ?? 0)}⬆️
                 </span>
               </p>
             </div>
@@ -135,9 +135,9 @@ const MainPage = (props: Props) => {
               />
             </Container>
             {/* Right  */}
-            <Container className="bg-yellow-300 shadow-sm justify-between gap-2 px-4 flex">
+            <Container className="bg-yellow-300  overflow-x-auto shadow-sm justify-between gap-2 px-4 flex">
               <Details
-                visibility={`${metersToKilometers(
+                visibility={`${metersToKilometers(  
                   firstData?.visibility ?? 10000
                 )} `}
                 windSpeed={`${convertWindSpeed(
@@ -168,8 +168,8 @@ const MainPage = (props: Props) => {
             key={i}
             description={d?.weather[0].description ?? ""}
             weatherIcon={d?.weather[0].icon ?? "01d"}
-            date={format(parseISO(d?.dt_txt ?? ""), "dd.MM")}
-            day={format(parseISO(d?.dt_txt ?? ""), "EEEE")}
+            date={d?.dt_txt ? format(parseISO(d.dt_txt), "dd.MM") : "N/A"}
+            day={d?.dt_txt ? format(parseISO(d.dt_txt), "EEEE") : "N/A"}
             feels_like={d?.main.feels_like ?? 0}
             temp={d?.main.temp ?? 0}
             temp_max={d?.main.temp_max ?? 0}

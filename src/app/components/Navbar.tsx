@@ -12,17 +12,16 @@ type Props = {};
 const Navbar = (props: Props) => {
   // I will use this city to give in a jotai state then pass to main function
   const [city, setCity] = useState<string>("");
-  const [error,setError]=useState("");
+  const [error, setError] = useState("");
   const [suggestion, setSuggestion] = useState<string[]>([]);
-  const [showSuggestion,setShowSuggestion]=useState<boolean>(false);
+  const [showSuggestion, setShowSuggestion] = useState<boolean>(false);
 
-  const[place,setPlace]=useAtom(placeAtom);
-  
+  const [place, setPlace] = useAtom(placeAtom);
+
   const handleChange = async (e: string) => {
     setCity(e);
     let cityArray: string[] = [];
-    if(e.length>2)
-    {
+    if (e.length > 2) {
       try {
         const respone = await axios.get(
           `https://api.openweathermap.org/data/2.5/find?q=${e}&appid=${process.env.NEXT_PUBLIC_WEATHER_KEY}`
@@ -39,8 +38,7 @@ const Navbar = (props: Props) => {
         setShowSuggestion(false);
         setSuggestion([]);
       }
-    }
-    else{
+    } else {
       setShowSuggestion(false);
       setError("location not Found");
     }
@@ -48,20 +46,20 @@ const Navbar = (props: Props) => {
   const handleSubmit: React.FormEventHandler<HTMLFormElement> = (e) => {
     e.preventDefault();
     setPlace(city);
-    console.log("Submit clicked",place);
+    console.log("Submit clicked", place);
   };
 
-  const handleSuggestionBoxClick=(list:string)=>{
-      setCity(list);
-      setShowSuggestion(false);
-  }
+  const handleSuggestionBoxClick = (list: string) => {
+    setCity(list);
+    setShowSuggestion(false);
+  };
 
   return (
-    <nav className="shadow-sm  sticky top-0 left-0 z-50 bg-white">
+    <nav className="shadow-sm  sticky top-0 left-0 z-50 bg-white w-full md:w-auto">
       <div className="h-[80px]     w-full    flex   justify-between items-center  max-w-7xl px-3 mx-auto">
-        <p className="flex items-center justify-center gap-2  ">
-          <h2 className="text-gray-500 text-3xl">Weather</h2>
-          <MdSunny className="text-3xl text-yellow-300 " />
+        <p className="flex items-center justify-center gap-2">
+          <h2 className="text-gray-500 text-xl sm:text-4xl">Weather</h2>
+          <MdSunny className="text-2xl sm:text-5xl text-yellow-300" />
         </p>
         <section className="flex gap-1 items-center ">
           <TiLocationArrow
@@ -70,27 +68,33 @@ const Navbar = (props: Props) => {
           />
 
           <ImLocation2 className="text-2xl text-pink-300" />
-          <p className="text-2xl text-gray-500">India</p>
-          <SearchBar
-            value={city}
-            onChange={(e) => {
-              handleChange(e.target.value);
-            }}
-            onSubmit={handleSubmit}
-          />
-            <SuggetionBox showSuggestions={showSuggestion} suggestions={suggestion} error={error} handleSuggestionBoxClick={handleSuggestionBoxClick} />
+          <p className="text-sm text-gray-500">{place}</p>
+          <div className="relative flex flex-col sm:flex-row">
+            <SearchBar
+              value={city}
+              onChange={(e) => {
+                handleChange(e.target.value);
+              }}
+              onSubmit={handleSubmit}
+            />
+            <SuggetionBox
+              showSuggestions={showSuggestion}
+              suggestions={suggestion}
+              error={error}
+              handleSuggestionBoxClick={handleSuggestionBoxClick}
+            />
+          </div>
         </section>
       </div>
     </nav>
   );
 };
 
-
 function SuggetionBox({
   showSuggestions,
   suggestions,
   handleSuggestionBoxClick,
-  error
+  error,
 }: {
   showSuggestions: boolean;
   suggestions: string[];

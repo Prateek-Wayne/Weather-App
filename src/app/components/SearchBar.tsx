@@ -10,21 +10,22 @@ type Props = {
 
 const SearchBar = (props: Props) => {
   return (
-    <form onSubmit={props.onSubmit} className="ml-1 flex">
+    <form onSubmit={props.onSubmit} className="flex ml-1 h-10">
       <input
-        className="border-gray-500 bg-slate-200 h-8 rounded-l-md px-5 text-2xl"
+        className=" py-2 w-full  border border-gray-300 rounded-l-md focus:outline-none text-sm  focus:border-blue-500 h-full"
         placeholder="Search location"
         value={props.value}
         onChange={props.onChange}
       />
       <button
-        className=" border-gray-500 rounded-r-md bg-blue-300"
+        className="px-4 py-[9px] bg-blue-500 text-white rounded-r-md focus:outline-none hover:bg-blue-600  h-full"
         type="submit"
       >
-        <IoSearchOutline className="text-3xl" />
+        <IoSearchOutline className="text-2xl" />
       </button>
     </form>
   );
 };
 
 export default SearchBar;
+
