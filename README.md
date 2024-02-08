@@ -2,6 +2,10 @@
 
 This is a weather application built with Next.js, Tailwind CSS, and Jotai for state management. It uses the OpenWeatherMap API to fetch weather data.
 
+## 🚀 Live Demo
+
+The application is deployed and can be accessed at https://weather-app-nine-gamma-44.vercel.app/
+
 ## 🌟 Features
 
 - Fetch and display weather data from the OpenWeatherMap API
