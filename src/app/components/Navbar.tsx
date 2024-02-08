@@ -5,7 +5,7 @@ import { ImLocation2 } from "react-icons/im";
 import SearchBar from "./SearchBar";
 import axios from "axios";
 import { useAtom } from "jotai";
-import { placeAtom } from "../atom";
+import { loadingAtom, placeAtom } from "../atom";
 
 type Props = {};
 
@@ -17,6 +17,7 @@ const Navbar = (props: Props) => {
   const [showSuggestion, setShowSuggestion] = useState<boolean>(false);
 
   const [place, setPlace] = useAtom(placeAtom);
+  const [loading,setLoading]=useAtom(loadingAtom);
 
   const handleChange = async (e: string) => {
     setCity(e);
@@ -44,15 +45,41 @@ const Navbar = (props: Props) => {
     }
   };
   const handleSubmit: React.FormEventHandler<HTMLFormElement> = (e) => {
+    setLoading(true);
     e.preventDefault();
-    setPlace(city);
-    console.log("Submit clicked", place);
+    setShowSuggestion(false);
+    setTimeout(() => {
+      setPlace(city);
+      setLoading(false);
+    }, 2000);
   };
 
   const handleSuggestionBoxClick = (list: string) => {
     setCity(list);
     setShowSuggestion(false);
   };
+
+  const handleGeoLocation=()=>{
+    if(navigator.geolocation)
+    {
+      navigator.geolocation.getCurrentPosition(async(positon)=>{
+          const {latitude,longitude}=positon.coords;
+          try {
+            setLoading(true);
+            const response = await axios.get(
+              `https://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&appid=${process.env.NEXT_PUBLIC_WEATHER_KEY}`
+            );
+            setTimeout(() => {
+              setLoading(false);
+              console.log(response.data.name);
+              setPlace(response.data.name);
+            }, 1000);
+          } catch (error) {
+            setLoading(false);
+          }
+      })
+    }
+  }
 
   return (
     <nav className="shadow-sm  sticky top-0 left-0 z-50 bg-white w-full md:w-auto">
@@ -65,6 +92,7 @@ const Navbar = (props: Props) => {
           <TiLocationArrow
             title="Your Current Location"
             className="text-4xl hover:cursor-pointer text-pink-300"
+            onClick={handleGeoLocation}
           />
 
           <ImLocation2 className="text-2xl text-pink-300" />
@@ -103,7 +131,7 @@ function SuggetionBox({
 }) {
   return (
     <>
-      {((showSuggestions && suggestions.length > 1) || error) && (
+      {((showSuggestions && suggestions.length > 1) || showSuggestions&&error) && (
         <ul className="mb-4 bg-white absolute border top-[60px] right-22 border-gray-300 rounded-md min-w-[200px] flex flex-col gap-1 py-2 px-2 ">
           {error && suggestions.length < 1 && (
             <li className="text-red-500 p-1 "> {error}</li>
